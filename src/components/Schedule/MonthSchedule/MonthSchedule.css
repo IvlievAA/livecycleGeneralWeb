@@ -1,0 +1,29 @@
+
+
+.ms-month{
+
+    border-collapse: collapse;
+    border-style: hidden;
+
+
+}
+
+.ms-week-day-name{
+    width: 11vw;
+    height: 4vh;
+    border: 1px #e3e3e3 solid;
+    border-radius: inherit;
+    color: #a6a6a6;
+}
+
+.ms{
+    background-color: white;
+
+    width: max-content;
+    height: max-content;
+    border: 1px #e3e3e3 solid;
+    border-radius: 7px;
+    margin-left: 5vw;
+    margin-top: 20px;
+    position: absolute;
+}

@@ -2,12 +2,35 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import './index.css';
 import App from './App';
+import {
+    createBrowserRouter,
+    RouterProvider,
+} from "react-router-dom";
 import reportWebVitals from './reportWebVitals';
+import Header from "./components/MainMenu/MainMenu";
+import MainContainer from "./containers/MainContainer/MainContainer";
+import NotFoundContainer from "./containers/NotFoundContainer/NotFoundContainer";
+import Calendar from "./components/Calendar/Calendar";
+import CalendarPage from "./pages/CalendarPage/CalendarPage";
+const router = createBrowserRouter([
+    {
+        path: "/",
+        element: <MainContainer/>,
+        errorElement: <NotFoundContainer />,
+        children:[
+            {
+                path:'calendar',
+                element:<CalendarPage/>
+            }
+        ]
+    },
+]);
+
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
-    <App />
+      <RouterProvider router={router} />
   </React.StrictMode>
 );
 

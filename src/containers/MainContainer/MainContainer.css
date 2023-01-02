@@ -1,0 +1,14 @@
+.container-main{
+    height: 100%;
+    width: 100%;
+
+    margin: 0;
+    padding: 0;
+}
+
+.container-main-body{
+    display: inline-block;
+    height: 100%;
+    vertical-align: top;
+    width: 86%;
+}

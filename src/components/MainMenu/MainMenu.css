@@ -1,0 +1,80 @@
+.header {
+    /*height: 4vh;*/
+    position: relative;
+    padding-inline: 1vw;
+    padding-top: 2vh;
+    padding-bottom: 2vh;
+}
+
+.header-project-logo {
+    height: 40px;
+}
+
+.header-item {
+    display: inline-block;
+    vertical-align: top;
+}
+
+.header-logo {
+    width: 100%;
+    height: 7%;
+
+    padding-top: 20px;
+    padding-left: 20px;
+}
+
+.header-header-logo-label {
+    margin-left: 10px;
+    font-size: 22px;
+    display: inline-block;
+    vertical-align: top;
+    margin-top:8px;
+    color: #2C74B3;
+}
+
+.avatar {
+    height: 40px;
+    border-radius: 50%;
+    display: inline-block;
+}
+
+.header-central-block{
+    width: 70%;
+}
+
+.header-links{
+    width: 100%;
+    height: 70%;
+    padding-top: 20px;
+}
+
+.header-link{
+    text-decoration: none;
+    color: #ffffff;
+    font-size: 19px;
+    margin-inline: 20px;
+
+    display: block;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    padding-left: 10px;
+
+}
+.header-user{
+    width: 20%;
+}
+
+.header-username{
+    display: inline-block;
+    margin-right: 20px;
+    vertical-align: top;
+    margin-top: 12px;
+    font-size: 16px;
+}
+/*d*/
+.mm{
+    background-color: #0A2647;
+    display: inline-block;
+    width: 14%;
+    height: 100%;
+}

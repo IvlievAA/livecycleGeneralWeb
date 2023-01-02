@@ -1,0 +1,67 @@
+.cp{
+    height: 100%;
+}
+.cp-current-settings{
+    height: 12%;
+}
+.cp-current-item{
+    display: inline-block;
+    margin-left: 20px;
+    font-size: 24px;
+}
+
+.cp-current-year{
+    margin-left: 10px;
+}
+.cp-current-switch{
+    height: 16px;
+    width: 26px;
+}
+
+.cp-stream-item{
+    display: inline-block;
+    padding-inline: 20px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    font-weight: 600;
+    font-size: 14px;
+}
+
+.cp-stream-item-selected{
+    color:#2C74B3 ;
+    border-bottom: 3px #2C74B3 solid;
+}
+
+.cp-streams{
+    padding-inline: 20px;
+    border-bottom: 1px #dadada solid;
+}
+
+.cp-mode{
+    height: 20px;
+    width: 20px;
+
+    margin-left: 10px;
+}
+
+.cp-mode-active{
+    fill:#2C74B3;
+}
+
+.cp-mode-no-active{
+    fill: #d0d0d0;
+}
+
+.cp-modes{
+    display: inline-block;
+    float: right;
+    margin-top: 5px;
+}
+
+.cp-month-background{
+    background-color: #f2f2f2;
+}
+
+.cp-schedule{
+    height: 88%;
+}
