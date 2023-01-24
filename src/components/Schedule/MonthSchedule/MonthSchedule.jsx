@@ -37,13 +37,13 @@ export default function MonthSchedule(props){
                 const month = createState(data.days)
                 setState(month)
             })
-    },[props.mothYearProps])
+    },[props.current])
 
     const createState=(resp)=>{
         const month = []
         let week= []
         const copyCurrent = moment(props.current);
-        let date = copyCurrent.add(-1,'week').startOf('isoWeek');
+        let date = copyCurrent.startOf('month').startOf('isoWeek');
         for (let i = 0; i < 42; i++) {
             week.push({
                 dayNumber:date.format('DD'),

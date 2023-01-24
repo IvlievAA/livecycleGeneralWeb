@@ -4,11 +4,13 @@
 
     margin: 0;
     padding: 0;
+
+    overflow: hidden;
 }
 
 .container-main-body{
     display: inline-block;
     height: 100%;
     vertical-align: top;
-    width: 86%;
+    width: 97%;
 }

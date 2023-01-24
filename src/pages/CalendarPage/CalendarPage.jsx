@@ -6,7 +6,6 @@ import moment from "moment";
 
 export default function CalendarPage(props) {
 
-
     const calendarMode = {
         TABLE: 'TABLE',
         COlUMS: 'COLUMNS'
@@ -27,12 +26,12 @@ export default function CalendarPage(props) {
         "December"
     ]
 
-    const refMoment = useRef(moment())
 
     const [mode, setMode] = useState(calendarMode.TABLE)
-    const [currentPoint, setCurrentPoint] = useState({
-        month: 'December',
-        year: '2022'
+    const [currentPoint, setCurrentPoint] = useState(moment())
+    const [changeValue, setChangeValue] = useState({
+        value: 0,
+        mode: calendarMode.TABLE
     })
 
     const [streams, setStreams] = useState([
@@ -49,17 +48,26 @@ export default function CalendarPage(props) {
     ])
 
     const [currentDate, setCurrentDate] = useState({
-        month:'',
-        year:''
+        month: '',
+        year: ''
     });
 
 
-    useEffect(()=>{
+    useEffect(() => {
         setCurrentDate({
-            month:months[refMoment.current.month()],
-            year:refMoment.current.year()
+            month: months[currentPoint.month()],
+            year: currentPoint.year()
         })
-    },[])
+    }, [])
+
+    useEffect(() => {
+        const current = getNow()
+        setCurrentPoint(current);
+        setCurrentDate({
+            month: months[current.month()],
+            year: current.year()
+        })
+    }, [changeValue])
 
 
     const clickByStreamTab = (stream) => {
@@ -74,28 +82,58 @@ export default function CalendarPage(props) {
     }
 
     const changeMode = (newMode) => {
+        moment.locale('ru', {
+            week: {
+                dow: 1
+            }
+        });
+        setCurrentPoint(moment())
+        setChangeValue({
+            value: 0,
+            mode:newMode
+        })
         if (mode !== newMode) {
             setMode(newMode)
         }
     }
 
     const addMonth = () => {
-        refMoment.current.add(1,'month')
-        setCurrentDate({
-            month:months[refMoment.current.month()],
-            year:refMoment.current.year()
-        })
+        setChangeValue({...changeValue, value: changeValue.value + 1})
     }
 
     const subMonth = () => {
-        refMoment.current.add(-1,'month')
-        setCurrentDate({
-            month:months[refMoment.current.month()],
-            year:refMoment.current.year()
-        })
+        setChangeValue({...changeValue, value: changeValue.value - 1})
     }
 
-    console.log(currentDate)
+    const getNow = () => {
+        let obj = moment();
+        if (changeValue.value !== 0) {
+            if (changeValue.mode === calendarMode.TABLE) {
+                return obj.add(changeValue.value, 'month')
+            } else {
+                return obj.add(changeValue.value, 'week').startOf('isoWeek')
+            }
+        } else {
+            return obj;
+        }
+    }
+
+
+    const getDayForWeek = (mode) => {
+        if (mode === 'begin') {
+            return currentPoint.startOf('week').format('D')+ ' '+ months[currentPoint.startOf('week').month()]
+        } else {
+            return currentPoint.endOf('week').format('D') + ' '+ months[currentPoint.endOf('week').month()]
+        }
+    }
+
+    const addWeek = ()=>{
+        setChangeValue({...changeValue,value: changeValue.value+1})
+    }
+
+    const subWeek = ()=>{
+        setChangeValue({...changeValue,value: changeValue.value-1})
+    }
 
     return (<div className='cp'>
         <div className='cp-current-settings'>
@@ -122,7 +160,35 @@ export default function CalendarPage(props) {
                         </svg>
                     </div>
                 </div> :
-                <div>sas</div>}
+                <div>
+                    <div>
+                        <div className='cp-current-item'>
+                            <div style={{margin: 0}} className='cp-current-inside-item'>{getDayForWeek('begin')}</div>
+                            <span className='cp-current-inside-item'>-</span>
+                            <div className='cp-current-inside-item'>{getDayForWeek('end')}</div>
+                        </div>
+                        <p className='cp-current-inside-item'>{currentPoint.endOf('week').year()}</p>
+
+                        <div style={{marginLeft: '6px'}} className='cp-current-item'>
+                            <svg className='cp-current-switch' xmlns="http://www.w3.org/2000/svg" id="Outline"
+                                 viewBox="0 0 24 24" width="512"
+                                 height="512"
+                                 onClick={subWeek}
+                            >
+                                <path
+                                    d="M17.17,24a1,1,0,0,1-.71-.29L8.29,15.54a5,5,0,0,1,0-7.08L16.46.29a1,1,0,1,1,1.42,1.42L9.71,9.88a3,3,0,0,0,0,4.24l8.17,8.17a1,1,0,0,1,0,1.42A1,1,0,0,1,17.17,24Z"/>
+                            </svg>
+                            <svg className='cp-current-switch' xmlns="http://www.w3.org/2000/svg" id="Outline"
+                                 viewBox="0 0 24 24" width="512"
+                                 height="512"
+                                 onClick={addWeek}
+                            >
+                                <path
+                                    d="M7,24a1,1,0,0,1-.71-.29,1,1,0,0,1,0-1.42l8.17-8.17a3,3,0,0,0,0-4.24L6.29,1.71A1,1,0,0,1,7.71.29l8.17,8.17a5,5,0,0,1,0,7.08L7.71,23.71A1,1,0,0,1,7,24Z"/>
+                            </svg>
+                        </div>
+                    </div>
+                </div>}
             <div className='cp-streams'>
                 <div style={{display: 'inline-block'}}>
                     {
@@ -171,7 +237,8 @@ export default function CalendarPage(props) {
             </div>
         </div>
         <div className={mode === calendarMode.TABLE ? 'cp-month-background cp-schedule' : 'cp-schedule'}>
-            {mode === calendarMode.TABLE ? <MonthSchedule mothYearProps={currentDate} current={refMoment.current}/> : <WeekSchedule/>}
+            {mode === calendarMode.TABLE ? <MonthSchedule mothYearProps={currentDate} current={currentPoint}/> :
+                <WeekSchedule current={currentPoint}/>}
         </div>
     </div>)
 }
