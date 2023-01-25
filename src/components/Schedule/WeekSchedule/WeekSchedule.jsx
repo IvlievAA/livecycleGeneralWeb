@@ -100,7 +100,7 @@ export default function WeekSchedule(props) {
         }
         setDates(days)
     }
-
+//1
     return (<div className='ws-container'>
             <div className='ws-container-weekly-days'>
                 {
