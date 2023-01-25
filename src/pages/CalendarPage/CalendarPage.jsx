@@ -53,6 +53,7 @@ export default function CalendarPage(props) {
     });
 
 
+
     useEffect(() => {
         setCurrentDate({
             month: months[currentPoint.month()],
@@ -87,10 +88,11 @@ export default function CalendarPage(props) {
                 dow: 1
             }
         });
-        setCurrentPoint(moment())
+        const mom = moment()
+        setCurrentPoint(mom)
         setChangeValue({
             value: 0,
-            mode:newMode
+            mode: newMode
         })
         if (mode !== newMode) {
             setMode(newMode)
@@ -120,19 +122,23 @@ export default function CalendarPage(props) {
 
 
     const getDayForWeek = (mode) => {
+
+        const date = moment(currentPoint)
+        let point
         if (mode === 'begin') {
-            return currentPoint.startOf('week').format('D')+ ' '+ months[currentPoint.startOf('week').month()]
+            point = date.startOf('week').format('D') + ' ' + months[date.startOf('week').month()]
         } else {
-            return currentPoint.endOf('week').format('D') + ' '+ months[currentPoint.endOf('week').month()]
+            point = date.endOf('week').format('D') + ' ' + months[date.endOf('week').month()]
         }
+        return point
     }
 
-    const addWeek = ()=>{
-        setChangeValue({...changeValue,value: changeValue.value+1})
+    const addWeek = () => {
+        setChangeValue({...changeValue, value: changeValue.value + 1})
     }
 
-    const subWeek = ()=>{
-        setChangeValue({...changeValue,value: changeValue.value-1})
+    const subWeek = () => {
+        setChangeValue({...changeValue, value: changeValue.value - 1})
     }
 
     return (<div className='cp'>
@@ -167,7 +173,7 @@ export default function CalendarPage(props) {
                             <span className='cp-current-inside-item'>-</span>
                             <div className='cp-current-inside-item'>{getDayForWeek('end')}</div>
                         </div>
-                        <p className='cp-current-inside-item'>{currentPoint.endOf('week').year()}</p>
+                        <p className='cp-current-inside-item'>{moment(currentPoint).endOf('week').year()}</p>
 
                         <div style={{marginLeft: '6px'}} className='cp-current-item'>
                             <svg className='cp-current-switch' xmlns="http://www.w3.org/2000/svg" id="Outline"

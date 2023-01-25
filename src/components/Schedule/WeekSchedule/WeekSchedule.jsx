@@ -1,11 +1,15 @@
 import './WeekSchedule.css'
 import {useEffect, useState} from "react";
 import moment from "moment";
+import DayEvent from "./DayEvent/DayEvent";
+import config from "../../../app.config.json";
 
 export default function WeekSchedule(props) {
 
 
     const [dates, setDates] = useState([])
+    const [dayEvents, setDayEvents] = useState([])
+
     const getMass = () => {
         const arr = []
         let subArr = []
@@ -14,7 +18,7 @@ export default function WeekSchedule(props) {
                 subArr.push({})
             }
             arr.push(subArr)
-            subArr=[]
+            subArr = []
         }
         return arr;
     }
@@ -32,19 +36,61 @@ export default function WeekSchedule(props) {
     ]
 
 
+
+
+
     useEffect(() => {
         moment.locale('ru', {
             week: {
                 dow: 1
             }
         });
-        setNumbersWeekDays(props.current)
+        setNumbersWeekDays(moment(props.current))
+        requestEvents()
     }, [props.current])
+
+    const requestEvents = () => {
+
+        const day = moment(props.current).startOf('week');
+        const arrDayEvents =[]
+        const begin = day.toISOString()
+        for (let i = 0; i < 6; i++) {
+            arrDayEvents.push({
+                date:day.toISOString().substring(0,18),
+                events:[]
+            })
+            day.add(1,'day')
+        }
+        const end = day.toISOString()
+        const body = JSON.stringify({
+            begin,
+            end
+        })
+        fetch(config.backendUrl + '/schedule/weekly_events', {
+            method: 'POST',
+            cors:'no-cors',
+            headers:{
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+            },
+            credentials: 'omit',
+            body
+        })
+            .then(response => response.json())
+            .then(message => {
+                message.days.forEach(day=>{
+                    const dayIndex = arrDayEvents.findIndex(localDay=>localDay.date === day.date.substring(0,18))
+                    arrDayEvents[dayIndex].events=day.events
+                })
+
+                debugger
+                setDayEvents(message)
+            })
+    }
 
     const setNumbersWeekDays = (now) => {
         let begin = now.startOf('isoWeek')
         const days = [];
-
         for (let i = 0; i < 7; i++) {
             days.push({
                 dayNumber: begin.format('DD'),
@@ -146,23 +192,16 @@ export default function WeekSchedule(props) {
 
                 </div>
                 {
-                    arr.map(item=>(
+                    dayEvents.length !== 0? arr.map((item, index) => (
                         <div className='ws-day'>
                             {
-                                item.map(o=>( <div className='ws-hour'></div>))
+                                item.map(o => (<div className='ws-hour'></div>))
                             }
-                            <div
-                            style={{
-                                position:'absolute',
-                                width:'90%',
-                                height:'500px',
-                                backgroundColor:'#eeee',
-                                borderRadius: '5px',
-                                marginInline:'5%',
-                                top:'20px'
-                            }}>a</div>
+                            {
+                                dayEvents[index].events.map(event => (<DayEvent/>))
+                            }
                         </div>
-                    ))
+                    )) : null
                 }
             </div>
         </div>
