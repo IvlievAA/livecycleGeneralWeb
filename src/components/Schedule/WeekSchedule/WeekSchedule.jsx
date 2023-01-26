@@ -9,13 +9,14 @@ export default function WeekSchedule(props) {
 
     const [dates, setDates] = useState([])
     const [dayEvents, setDayEvents] = useState([])
+    const [state, setState] = useState([])
 
     const getMass = () => {
         const arr = []
         let subArr = []
         for (let i = 0; i < 7; i++) {
             for (let j = 0; j < 24; j++) {
-                subArr.push({})
+                subArr.push({isBlock: true})
             }
             arr.push(subArr)
             subArr = []
@@ -36,9 +37,6 @@ export default function WeekSchedule(props) {
     ]
 
 
-
-
-
     useEffect(() => {
         moment.locale('ru', {
             week: {
@@ -50,16 +48,16 @@ export default function WeekSchedule(props) {
     }, [props.current])
 
     const requestEvents = () => {
-
+        const resultState = getMass();
         const day = moment(props.current).startOf('week');
-        const arrDayEvents =[]
+        const arrDayEvents = []
         const begin = day.toISOString()
-        for (let i = 0; i < 6; i++) {
+        for (let i = 0; i < 7; i++) {
             arrDayEvents.push({
-                date:day.toISOString().substring(0,18),
-                events:[]
+                date: day.toISOString().substring(0, 18),
+                events: []
             })
-            day.add(1,'day')
+            day.add(1, 'day')
         }
         const end = day.toISOString()
         const body = JSON.stringify({
@@ -68,8 +66,8 @@ export default function WeekSchedule(props) {
         })
         fetch(config.backendUrl + '/schedule/weekly_events', {
             method: 'POST',
-            cors:'no-cors',
-            headers:{
+            cors: 'no-cors',
+            headers: {
                 'Accept': 'application/json',
                 'Content-Type': 'application/json',
             },
@@ -78,15 +76,30 @@ export default function WeekSchedule(props) {
         })
             .then(response => response.json())
             .then(message => {
-                message.days.forEach(day=>{
-                    const dayIndex = arrDayEvents.findIndex(localDay=>localDay.date === day.date.substring(0,18))
-                    arrDayEvents[dayIndex].events=day.events
+                message.days.forEach(day => {
+                    const dayIndex = arrDayEvents.findIndex(localDay => localDay.date === day.date.substring(0, 18))
+                    arrDayEvents[dayIndex].events = day.events
                 })
-
-                debugger
-                setDayEvents(message)
+                const result = mapEvents(resultState,arrDayEvents);
+                setState(result)
             })
     }
+
+    const mapEvents = (prepare,events) => {
+        for (let i = 0; i < 7; i++) {
+            if(events[i].events.length !==0){
+                events[i].events.reduce(o=> o.isBlock=false)
+            }
+        }
+
+        for (let i = 0; i < 7; i++) {
+            if(events[i].events){
+                prepare[i].push(...events[i].events)
+            }
+        }
+        return prepare;
+    }
+
 
     const setNumbersWeekDays = (now) => {
         let begin = now.startOf('isoWeek')
@@ -100,7 +113,7 @@ export default function WeekSchedule(props) {
         }
         setDates(days)
     }
-//12
+
     return (<div className='ws-container'>
             <div className='ws-container-weekly-days'>
                 {
@@ -117,6 +130,21 @@ export default function WeekSchedule(props) {
             </div>
             <div className='ws'>
                 <div className='ws-hours-menu'>
+                    <div className='ws-hour-label'>
+                        <p className='ws-hour-value'>00:00</p>
+                    </div>
+                    <div className='ws-hour-label'>
+                        <p className='ws-hour-value'>01:00</p>
+                    </div>
+                    <div className='ws-hour-label'>
+                        <p className='ws-hour-value'>02:00</p>
+                    </div>
+                    <div className='ws-hour-label'>
+                        <p className='ws-hour-value'>03:00</p>
+                    </div>
+                    <div className='ws-hour-label'>
+                        <p className='ws-hour-value'>04:00</p>
+                    </div>
                     <div className='ws-hour-label'>
                         <p className='ws-hour-value'>05:00</p>
                     </div>
@@ -174,34 +202,14 @@ export default function WeekSchedule(props) {
                     <div className='ws-hour-label'>
                         <p className='ws-hour-value'>23:00</p>
                     </div>
-                    <div className='ws-hour-label'>
-                        <p className='ws-hour-value'>00:00</p>
-                    </div>
-                    <div className='ws-hour-label'>
-                        <p className='ws-hour-value'>01:00</p>
-                    </div>
-                    <div className='ws-hour-label'>
-                        <p className='ws-hour-value'>02:00</p>
-                    </div>
-                    <div className='ws-hour-label'>
-                        <p className='ws-hour-value'>03:00</p>
-                    </div>
-                    <div className='ws-hour-label'>
-                        <p className='ws-hour-value'>04:00</p>
-                    </div>
 
                 </div>
                 {
-                    dayEvents.length !== 0? arr.map((item, index) => (
-                        <div className='ws-day'>
-                            {
-                                item.map(o => (<div className='ws-hour'></div>))
-                            }
-                            {
-                                dayEvents[index].events.map(event => (<DayEvent/>))
-                            }
-                        </div>
-                    )) : null
+                    state.length !==0 ?state.map( d => (<div className='ws-day'>
+                        {
+                            d.map(h=> (h.isBlock?<div className='ws-hour'></div>:<DayEvent event={h}/>))
+                        }
+                    </div>)):'asas'
                 }
             </div>
         </div>

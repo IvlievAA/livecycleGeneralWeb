@@ -1,18 +1,45 @@
 .de{
     position:absolute;
-    width:80%;
+    width:90%;
     height:0px;
     border-radius: 5px;
     margin-inline:5%;
-    padding: 5%;
     overflow: hidden;
+
+    -webkit-box-shadow: 0px 4px 8px 0px rgba(34, 60, 80, 0.28);
+    -moz-box-shadow: 0px 4px 8px 0px rgba(34, 60, 80, 0.28);
+    box-shadow: 0px 4px 8px 0px rgba(34, 60, 80, 0.28);
 }
 
 .de-name{
     display: inline-block;
     margin: 0;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    width: 87%;
+    height: 18px;
+    white-space: nowrap;
+    font-weight: 600;
+    color: white;
+
 }
 
 .de-time{
     font-size: 14px;
+    color: white;
+    margin: 0;
+    margin-top: 5px;
+}
+
+.de-content{
+    margin: 5%;
+}
+
+.de-important{
+    width: 14px;
+    height: 14px;
+    display: inline-block;
+    fill: #ff7474;
+    vertical-align: top;
+    margin-right: 3%;
 }
